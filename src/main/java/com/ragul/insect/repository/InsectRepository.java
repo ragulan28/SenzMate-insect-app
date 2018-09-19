@@ -1,7 +1,7 @@
 package com.ragul.insect.repository;
 
 import com.ragul.insect.model.Insect;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface InsectRepository extends MongoRepository<Insect, String> {
+public interface InsectRepository extends JpaRepository<Insect, String> {
 }

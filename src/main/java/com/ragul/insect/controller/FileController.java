@@ -32,11 +32,13 @@ public class FileController {
     public ResponseEntity<List<Insect>> getAll() {
         List<Insect> insects = insectRepository.findAll();
 
-        return ResponseEntity.ok()
+        return ResponseEntity
+                .ok()
                 .body(insects);
     }
+
     @PostMapping("/uploadFile")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("name") String name, @RequestParam("description") String description) {
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("name") String name, @RequestParam("description") String description) {
         String fileName = fileStorageService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -45,7 +47,8 @@ public class FileController {
                 .toUriString();
 
         Insect insect = new Insect(name, description, fileDownloadUri);
-        this.insectRepository.save(insect);
+        insectRepository.save(insect);
+
         return new UploadFileResponse(fileName,
                 name,
                 description,
@@ -53,7 +56,6 @@ public class FileController {
                 file.getContentType(),
                 file.getSize());
     }
-
 
 
     @GetMapping("/downloadFile/{fileName:.+}")
@@ -70,7 +72,7 @@ public class FileController {
         }
 
         // Fallback to the default content type if type could not be determined
-        if(contentType == null) {
+        if (contentType == null) {
             contentType = "application/octet-stream";
         }
 
@@ -78,6 +80,12 @@ public class FileController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+
+    @GetMapping("/deleteAll")
+    public String deleteAll() {
+        insectRepository.deleteAll();
+        return "All data deleted";
     }
 
 }

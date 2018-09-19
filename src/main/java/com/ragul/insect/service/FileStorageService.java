@@ -2,8 +2,6 @@ package com.ragul.insect.service;
 
 import com.ragul.insect.exception.FileStorageException;
 import com.ragul.insect.exception.MyFileNotFoundException;
-import com.ragul.insect.property.FileStorageProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -22,9 +20,9 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
 
-    @Autowired
-    public FileStorageService(FileStorageProperties fileStorageProperties) {
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
+
+    public FileStorageService() {
+        this.fileStorageLocation = Paths.get("./uploads")
                 .toAbsolutePath().normalize();
 
         try {
@@ -36,7 +34,7 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file) {
         // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(System.currentTimeMillis() + file.getOriginalFilename());
 
         try {
             // Check if the file's name contains invalid characters
@@ -67,4 +65,6 @@ public class FileStorageService {
             throw new MyFileNotFoundException("File not found " + fileName, ex);
         }
     }
+
+
 }
