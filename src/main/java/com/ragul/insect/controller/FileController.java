@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/file")
 public class FileController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
@@ -42,7 +43,7 @@ public class FileController {
         String fileName = fileStorageService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
+                .path("/api/file/downloadFile/")
                 .path(fileName)
                 .toUriString();
 
